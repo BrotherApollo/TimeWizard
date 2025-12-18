@@ -1,36 +1,48 @@
+"""
+Datetime logic for Calculating details about payperiods
+"""
+
 from datetime import timedelta, date
 import holidays
 import calendar
 
 
-def build_payperiod(today=None):
-    if today == None:
-        today = date.today()
-    
+def build_payperiod(today:date= None) -> list[date]:
+    """
+    Takes a optional datetime.date object, defalts to today.
+
+    Returns a list of date objects that make up the pay period
+    including the provided date.
+    """
+    today = today or date.today()
+
     if today.day <=15:
         start = date(today.year, today.month, 1)
         end = date(today.year, today.month, 15)
     else:
         start = date(today.year, today.month, 16)
-        monthEnd = calendar.monthrange(today.year, today.month)[1]
-        end = date(today.year, today.month, monthEnd)
+        month_end = calendar.monthrange(today.year, today.month)[1]
+        end = date(today.year, today.month, month_end)
 
     return [
         start + timedelta(days = i)
         for i in range((end-start).days + 1)
     ]
 
-def calculate_hours(payperiod: list[date]):
-    hours = 0
-    for d in payperiod:
-        if d.weekday() < 5:
-            hours += 8
-    
-    return hours
+def calculate_hours(payperiod: list[date]) -> int:
+    """
+    Returns the number of hours hours required for a payperiod.
+
+    hours = number of week days * 8
+    """
+    return sum((8 for d in payperiod if d.weekday() < 5))
 
 def count_holidays(payperiod: list[date]) -> list[str]:
-    today = payperiod[0]
-    us_holidays = holidays.US(years=today.year)
+    """
+    Returns the list of holidays in a given list of dates objects
+    """
+    years = {d.year for d in payperiod}
+    us_holidays = holidays.US(years=years)
     period_holidays = []
     for d in payperiod:
         if d in us_holidays.keys():
@@ -38,12 +50,15 @@ def count_holidays(payperiod: list[date]) -> list[str]:
 
     return period_holidays
 
-def summarize_payperiod(today=None):
+def summarize_payperiod(today=None) -> str:
+    """
+    Returns a brief summary of the payperiod that the provided date is in.
+    """
     period = build_payperiod(today=today)
-    holidays = count_holidays(period)
+    period_holidays = count_holidays(period)
     hours = calculate_hours(period)
-    holidays_str = " and ".join(holidays)
-    if holidays:
-        return f"This is an {hours} payperiod with {len(holidays)} holiday(s): {holidays_str}."
+    holidays_str = " and ".join(period_holidays)
+    if period_holidays:
+        return f"This payperiod has {hours} hours and {len(period_holidays)} holiday(s): {holidays_str}."
     else:
-        return f"This is an {hours} payperiod with no holidays."
+        return f"This payperiod has {hours} hours with no holidays."
