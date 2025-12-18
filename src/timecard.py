@@ -47,9 +47,3 @@ def summarize_payperiod(today=None):
         return f"This is an {hours} payperiod with {len(holidays)} holiday(s): {holidays_str}."
     else:
         return f"This is an {hours} payperiod with no holidays."
-
-# print(len(build_payperiod()))
-# print(calculate_hours(build_payperiod()))
-
-
-print(summarize_payperiod(date(2025, 12, 1)))
