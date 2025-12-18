@@ -43,10 +43,13 @@ def summarize_payperiod(today=None):
     holidays = count_holidays(period)
     hours = calculate_hours(period)
     holidays_str = " and ".join(holidays)
-    return f"This is an {hours} payperiod with {len(holidays)} holiday(s): {holidays_str}"
+    if holidays:
+        return f"This is an {hours} payperiod with {len(holidays)} holiday(s): {holidays_str}."
+    else:
+        return f"This is an {hours} payperiod with no holidays."
 
 # print(len(build_payperiod()))
 # print(calculate_hours(build_payperiod()))
 
-r = build_payperiod()
-print(count_holidays(r))
+
+print(summarize_payperiod(date(2025, 12, 1)))
