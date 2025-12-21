@@ -32,6 +32,7 @@ bot = commands.Bot(
     command_prefix="!", intents=intents, allowed_mentions=allowed_mentions
 )
 
+
 # Commands
 # !timecard
 @bot.command()
@@ -56,6 +57,14 @@ async def excuse(ctx):
 # Listeners
 @bot.event
 async def on_message(message: discord.Message):
+    # Top level filter to hard limit bot to channels
+    approved_channels = [
+        TIMECARD_CHANNEL,
+        TEST_CHANNEL,
+    ]
+    if message.channel.id not in approved_channels:
+        return
+
     triggers = ["free beer"]
     target_users = [
         int(os.getenv("JIMMY_ID", 0)),
