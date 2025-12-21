@@ -74,4 +74,4 @@ def timecard_reminder():
 If you are having login issues email the following ASAP: {}
 """.format(summarize_payperiod(), EMAIL_AID)
 
-print(timecard_reminder())
+# print(timecard_reminder())

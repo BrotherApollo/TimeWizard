@@ -1,4 +1,4 @@
-from src.meme import random_meme, spongify
+from src.meme import random_meme, spongify, get_reacts
 from src.excuses import generate_excuse
 
 def test_random_meme():
@@ -12,3 +12,6 @@ def test_spongify():
     assert spongify("test") == "tEsT"
     
     assert spongify("free beer") == "fReE BeEr"
+    
+def test_reacts():
+    assert get_reacts("bot") == ["🤖"]

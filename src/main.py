@@ -8,7 +8,7 @@ from apscheduler.triggers.cron import CronTrigger
 
 # Local Imports
 from timecard import summarize_payperiod, timecard_reminder
-from meme import random_meme, spongify
+from meme import random_meme, spongify, get_reacts
 from excuses import generate_excuse
 
 # Loading discord token form environement
@@ -65,13 +65,20 @@ async def on_message(message: discord.Message):
     
     # check if message is from target user
     from_target = (message.author.id in target_users)
+    lower_message = message.content.lower()
+    
+    # Auto Reacts
+    reacts = get_reacts(lower_message)    
+    if message.mention_everyone:
+        reacts += ["🥳", "🔥"]
+    for emoji in reacts:
+        await message.add_reaction(emoji)
     
     # Call out identified, reply with a meme
     if message.mentions and from_target and not message.mention_everyone:
         await message.reply(file=discord.File(random_meme()))
     
     # trigger phrases detected
-    lower_message = message.content.lower()
     active_triggers = [x for x in triggers if x in lower_message]
     if from_target and active_triggers:
         # Mocking Target User
@@ -130,7 +137,7 @@ async def on_ready():
     # Test
     scheduler.add_job(
         lambda: bot.loop.create_task(send_test_reminder()),
-        CronTrigger(day=19, hour=13, minute=00)
+        CronTrigger(day=22, hour=00, minute=30)
         )
     
     scheduler.start()    
