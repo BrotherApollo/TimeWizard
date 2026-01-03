@@ -16,6 +16,7 @@ TOKEN = os.getenv("DISCORD_TOKEN", "")
 APPROVED_CHANNELS = [
         1451552389181214911, # Test Channel
         1349895419513143317, # Studies Timecard Channel
+        1430574832436645939, # Lobsters Timecard Channel
     ]
 
 # Scheduler
