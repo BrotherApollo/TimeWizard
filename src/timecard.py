@@ -3,7 +3,7 @@ Datetime logic for Calculating details about payperiods
 """
 
 from datetime import timedelta, date
-from .holiday import USFedHolidays
+from src.holiday import USFedHolidays
 import os
 from dotenv import load_dotenv
 

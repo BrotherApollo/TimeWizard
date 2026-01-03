@@ -5,7 +5,7 @@ import os
 def random_meme():
     memes = os.listdir("assets/memes")
     choice = random.choice(memes)
-    return f"assets/{choice}"
+    return f"assets/memes/{choice}"
 
 
 def spongify(s):

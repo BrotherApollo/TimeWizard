@@ -1,5 +1,8 @@
 services:
-  jimbot:
+  timemage:
     build: .
     volumes:
       - .:/app
+    command: python -m src.main
+    env_file:
+      - .env

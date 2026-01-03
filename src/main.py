@@ -1,20 +1,22 @@
 import discord
 from discord.ext import commands
 import logging
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 # Local Imports
-from timecard import summarize_payperiod, timecard_reminder
-from meme import random_meme, spongify, get_reacts, generate_excuse
+from src.timecard import summarize_payperiod, timecard_reminder
+from src.meme import random_meme, get_reacts, generate_excuse
 
 # Loading discord token form environement
-load_dotenv()
+# load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN", "")
-TIMECARD_CHANNEL = int(os.getenv("TIMECARD_CHANNEL", 0))
-TEST_CHANNEL = int(os.getenv("TEST_CHANNEL", 0))
+APPROVED_CHANNELS = [
+        1451552389181214911, # Test Channel
+        1349895419513143317, # Studies Timecard Channel
+    ]
 
 # Scheduler
 scheduler = AsyncIOScheduler()
@@ -58,11 +60,7 @@ async def excuse(ctx):
 @bot.event
 async def on_message(message: discord.Message):
     # Top level filter to hard limit bot to channels
-    approved_channels = [
-        TIMECARD_CHANNEL,
-        TEST_CHANNEL,
-    ]
-    if message.channel.id not in approved_channels:
+    if message.channel.id not in APPROVED_CHANNELS:
         return
 
     # Auto Reacts
@@ -71,24 +69,24 @@ async def on_message(message: discord.Message):
     for emoji in reacts:
         await message.add_reaction(emoji)
     
-    triggers = ["free beer"]
-    target_users = [
-        int(os.getenv("JIMMY_ID", 0)),
-        int(os.getenv("CALEB_ID", 0)),
-    ]
+    # triggers = ["free beer"]
+    # target_users = [
+    #     int(os.getenv("JIMMY_ID", 0)),
+    #     int(os.getenv("CALEB_ID", 0)),
+    # ]
 
     # check if message is from target user
-    from_target = message.author.id in target_users
+    # from_target = message.author.id in target_users
 
     # # Call out identified, reply with a meme
     # if message.mentions and from_target and not message.mention_everyone:
     #     await message.reply(file=discord.File(random_meme()))
 
     # trigger phrases detected
-    active_triggers = [x for x in triggers if x in lower_message]
-    if from_target and active_triggers:
-        # Mocking Target User
-        await message.reply(spongify(lower_message))
+    # active_triggers = [x for x in triggers if x in lower_message]
+    # if from_target and active_triggers:
+    #     # Mocking Target User
+    #     await message.reply(spongify(lower_message))
 
     # processing regular commands
     await bot.process_commands(message)
@@ -96,21 +94,23 @@ async def on_message(message: discord.Message):
 
 # Scheduled Reminders
 async def send_start_timecard_reminder():
-    channel = bot.get_channel(TIMECARD_CHANNEL)
-    await channel.send(
-        "If you haven't started a timecard this pay period, please fix that today."
-    )
+    for channelid in APPROVED_CHANNELS:
+        channel = bot.get_channel(channelid)
+        await channel.send(
+            "If you haven't started a timecard this pay period, please fix that today."
+        )
 
 
 async def send_timecard_reminder():
     """Post timecard reminders in a specific channel"""
-    channel = bot.get_channel(TIMECARD_CHANNEL)
-    await channel.send(timecard_reminder())
+    for channelid in APPROVED_CHANNELS:
+        channel = bot.get_channel(channelid)
+        await channel.send(timecard_reminder())
 
 
 # Test Reminders
 async def send_test_reminder():
-    channel = bot.get_channel(TEST_CHANNEL)
+    channel = bot.get_channel(1451552389181214911)
     await channel.send(timecard_reminder())
 
 
