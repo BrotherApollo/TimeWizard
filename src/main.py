@@ -100,7 +100,7 @@ async def on_message(message: discord.Message):
 async def send_start_timecard_reminder():
     channel = bot.get_channel(TIMECARD_CHANNEL)
     await channel.send(
-        f"If you haven't started a timecard this pay period, please fix that today."
+        "If you haven't started a timecard this pay period, please fix that today."
     )
 
 

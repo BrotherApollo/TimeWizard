@@ -3,8 +3,7 @@ Datetime logic for Calculating details about payperiods
 """
 
 from datetime import timedelta, date
-import holidays
-import calendar
+from .holiday import USFedHolidays
 import os
 from dotenv import load_dotenv
 
@@ -26,8 +25,11 @@ def build_payperiod(today:date|None= None) -> list[date]:
         end = date(today.year, today.month, 15)
     else:
         start = date(today.year, today.month, 16)
-        month_end = calendar.monthrange(today.year, today.month)[1]
-        end = date(today.year, today.month, month_end)
+        next_month = today.month + 1
+        if next_month <= 12:
+            end = date(today.year, next_month, 1) - timedelta(days=1)
+        else:
+            end = date(today.year + 1, 1, 1) - timedelta(days=1)
 
     return [
         start + timedelta(days = i)
@@ -47,7 +49,7 @@ def count_holidays(payperiod: list[date]) -> list[str]:
     Returns the list of holidays in a given list of dates objects
     """
     years = {d.year for d in payperiod}
-    us_holidays = holidays.US(years=years)
+    us_holidays = USFedHolidays(years=list(years))
     period_holidays = []
     for d in payperiod:
         if d in us_holidays.keys():

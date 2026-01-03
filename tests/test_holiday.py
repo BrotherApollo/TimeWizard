@@ -1,4 +1,4 @@
-from src.holidays import USFedHolidays
+from src.holiday import USFedHolidays
 from datetime import date
 
 def test_num_holidays():
