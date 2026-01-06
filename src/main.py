@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 import logging
-# from dotenv import load_dotenv
 import os
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -10,8 +9,6 @@ from apscheduler.triggers.cron import CronTrigger
 from src.timecard import summarize_payperiod, timecard_reminder
 from src.meme import random_meme, get_reacts, generate_excuse
 
-# Loading discord token form environement
-# load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN", "")
 APPROVED_CHANNELS = [
         1451552389181214911, # Test Channel
@@ -148,7 +145,7 @@ async def on_ready():
     # Test
     scheduler.add_job(
         lambda: bot.loop.create_task(send_test_reminder()),
-        CronTrigger(day=22, hour=00, minute=30),
+        CronTrigger(day=6, hour=3, minute=40)
     )
 
     scheduler.start()

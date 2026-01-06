@@ -6,6 +6,15 @@ from datetime import timedelta, date
 from src.holiday import USFedHolidays
 import os
 from dotenv import load_dotenv
+import logging
+
+# Basic configuration
+logging.basicConfig(
+    level=logging.INFO,  # controls what level of messages to show
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+
 
 load_dotenv()
 EMAIL_AID = os.getenv("EMAIL_AID", "")
@@ -71,9 +80,8 @@ def summarize_payperiod(today=None) -> str:
         return f"This payperiod has {hours} hours with no holidays."
     
 def timecard_reminder(): 
+    logging.info("firing test reminder")
     return """
 @everyone it's timecard day. {} 
 If you are having login issues email the following ASAP: {}
 """.format(summarize_payperiod(), EMAIL_AID)
-
-# print(timecard_reminder())

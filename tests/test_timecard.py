@@ -1,4 +1,9 @@
-from src.timecard import build_payperiod, calculate_hours, count_holidays
+from src.timecard import (
+    build_payperiod,
+    calculate_hours,
+    count_holidays,
+    timecard_reminder,
+)
 from datetime import date
 
 
@@ -53,3 +58,6 @@ def test_holidays():
     dates = build_payperiod(today=date(2025, 11, 1))
     holidays = count_holidays(dates)
     assert len(holidays) == 1
+
+def test_reminders():
+    assert isinstance(timecard_reminder(), str)

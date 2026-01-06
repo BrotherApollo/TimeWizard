@@ -45,7 +45,7 @@ def generate_excuse():
         "my timecard",
         "the VPN connection",
         "the reminder email",
-        "rsa token",
+        "my rsa token",
     ]
 
     modifiers = [
