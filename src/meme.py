@@ -1,10 +1,20 @@
 import random
 import os
 
+meme_history = []
 
 def random_meme():
+    global meme_history
     memes = os.listdir("assets/memes")
     choice = random.choice(memes)
+    while choice in meme_history:
+        choice = random.choice(memes)
+    
+    # adding the meme to history and limiting size
+    meme_history.append(choice)
+    if len(meme_history) > 5:
+        meme_history.pop(0)
+    
     return f"assets/memes/{choice}"
 
 
